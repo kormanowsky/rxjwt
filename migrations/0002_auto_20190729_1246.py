@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('impressmap_jwt', '0001_initial'),
+        ('rxjwt', '0001_initial'),
     ]
 
     operations = [
