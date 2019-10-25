@@ -2,18 +2,14 @@ import hmac
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from datetime import datetime, timedelta
 from hashlib import sha512
-from importlib import import_module
 from json import dumps as json_encode, loads as json_decode
 
-from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from .exceptions import IncorrectTokenHeaderException, IncorrectTokenPayloadException, \
     InvalidAlgorithmException
 from .models import ExpiredToken
-from .utils import string_as_base64, module_class
-
-user_module, user_class = module_class(settings.AUTH_USER_MODEL)
-User = getattr(import_module(user_module), user_class)
+from .utils import string_as_base64
 
 
 class Token:
@@ -299,7 +295,7 @@ class UserToken(Token):
             secret), "utf-8")
 
     @classmethod
-    def generate_for_user(cls, user: User, secret, payload=None):
+    def generate_for_user(cls, user, secret, payload=None):
         if payload is None:
             payload = {}
         payload["uid"] = user.id
@@ -308,7 +304,7 @@ class UserToken(Token):
     def verify(self, secret) -> bool:
         payload = self.get_payload()
         user_id = payload["uid"]
-        user = User.objects.filter(id=user_id)
+        user = get_user_model().objects.filter(id=user_id)
         if user.exists():
             secret = self.__get_secret_for_user(user[0], secret)
             if not super().verify(secret):
@@ -333,7 +329,7 @@ class UserRefreshToken(UserToken, RefreshToken):
         return generate_user_token_pair(self.user, secret, self.payload)
 
 
-def generate_user_token_pair(user: User, secret, payload: dict = None):
+def generate_user_token_pair(user, secret, payload: dict = None):
     return UserAccessToken.generate_for_user(user, secret, payload), \
            UserRefreshToken.generate_for_user(user, secret, payload)
 
