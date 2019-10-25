@@ -17,15 +17,3 @@ def generate_secret():
     :return: The secret value which will be used in token creation.
     """
     return bytes(str(uuid4()), "utf-8")
-
-
-def module_class(path):
-    """
-    Splits a path to module and class name
-    :param path: The path to split.
-    :return: The module name and the class name
-    """
-    parts = path.split(".")
-    cls = parts[-1]
-    module = path.replace(".{}".format(cls), "")
-    return module, cls
