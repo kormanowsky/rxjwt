@@ -1,8 +1,14 @@
+from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from django.conf import settings
-from .token import UserAccessToken
+from .token import UserAccessToken as DefaultUserAceessToken
+from .utils import import_class
+
+try:
+    UserAccessToken = import_class(settings.RXJWT["ACCESS_TOKEN_CLASS"])
+except ImportError or KeyError:
+    UserAccessToken = DefaultUserAceessToken
 
 
 class JWTAuthentication(BaseAuthentication):

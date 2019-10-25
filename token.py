@@ -288,7 +288,7 @@ class UserToken(Token):
         self.user = None
 
     @classmethod
-    def __get_secret_for_user(cls, user, secret=""):
+    def get_secret_for_user(cls, user, secret=""):
         return bytes("{}{}{}".format(
             user.password.split("$")[-1],
             str(user.date_joined.timestamp()),
@@ -299,14 +299,14 @@ class UserToken(Token):
         if payload is None:
             payload = {}
         payload["uid"] = user.id
-        return super().generate(payload, cls.__get_secret_for_user(user, secret))
+        return super().generate(payload, cls.get_secret_for_user(user, secret))
 
     def verify(self, secret) -> bool:
         payload = self.get_payload()
         user_id = payload["uid"]
         user = get_user_model().objects.filter(id=user_id)
         if user.exists():
-            secret = self.__get_secret_for_user(user[0], secret)
+            secret = self.get_secret_for_user(user[0], secret)
             if not super().verify(secret):
                 return False
             self.user = user[0]
