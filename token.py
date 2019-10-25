@@ -34,6 +34,13 @@ class Token:
         """
         self.get_type()
         self.string = string
+        self.__header = None
+        self.__payload = None
+        self.__signature = None
+        self.__header_dict = None
+        self.__payload_dict = None
+        self.__is_correct = False
+        self.payload = None
         try:
             self.__header, self.__payload, self.__signature = (bytes(i, "utf-8")
                                                                for i in
@@ -303,6 +310,8 @@ class UserToken(Token):
 
     def verify(self, secret) -> bool:
         payload = self.get_payload()
+        if not payload:
+            return False
         user_id = payload["uid"]
         user = get_user_model().objects.filter(id=user_id)
         if user.exists():
