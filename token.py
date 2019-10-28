@@ -51,7 +51,6 @@ class Token:
             self.payload = self.__payload_dict
         except ValueError or UnicodeDecodeError:
             self.__is_correct = False
-            print("Incorrect token string: {}".format(self.string))
 
     @classmethod
     def get_type(cls) -> str:
