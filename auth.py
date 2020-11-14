@@ -18,19 +18,28 @@ class JWTAuthentication(BaseAuthentication):
         if auth_header is None:
             return None
         if not len(auth_header.split()):
-            raise AuthenticationFailed({"error": "invalid-header", "detail": "Invalid authentication header."})
+            raise AuthenticationFailed({"error": "invalid-header",
+                                        "detail": "Invalid authentication header."})
         auth_type, auth_token = auth_header.split()
         if auth_type != "Token":
-            raise AuthenticationFailed({"error": "invalid-header", "detail": "Invalid authentication header."})
+            raise AuthenticationFailed({"error": "invalid-header",
+                                        "detail": "Invalid authentication header."})
         user_access_token = UserAccessToken(auth_token)
         if not user_access_token.verify(settings.SECRET_KEY):
             raise AuthenticationFailed(
-                {"error": "invalid-token", "detail": "The token is either invalid or expired, or the token's"
-                                                     " owner is not found."})
+                {"error": "invalid-token",
+                 "detail": "The token is either invalid or expired, or the token's"
+                           " owner is not found."})
         current_user = user_access_token.get_user()
-        if hasattr(current_user, "datetime_removed") and current_user.datetime_removed is not None:
+        try:
+            soft_delete_attr = settings.RXJWT["SOFT_DELETE_ATTR"]
+        except KeyError:
+            soft_delete_attr = "datetime_removed"
+        if hasattr(current_user, soft_delete_attr) and getattr(current_user,
+                                                               soft_delete_attr) is not None:
             raise AuthenticationFailed(
-                {"error": "invalid-token", "detail": "The token is either invalid or expired, or the token's"
-                                                     " owner is not found."})
+                {"error": "invalid-token",
+                 "detail": "The token is either invalid or expired, or the token's"
+                           " owner is not found."})
         current_user.save()
         return current_user, str(user_access_token)

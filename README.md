@@ -77,3 +77,4 @@ RXJWT = {
 ```
 - __ACCESS_TOKEN_CLASS__: A string containing path to custom access token class e. g. `yourapp.token.YourUserAccessToken`. 
 This setting must be set when using custom access token class and JWTAuthentication from rxjwt.auth
+- __SOFT_DELETE_ATTR__: A string containing soft delete attribute name of your User model. Defaults to `datetime_removed`. If there is an attribute with given name and it `is not None` token will be considered invalid.
