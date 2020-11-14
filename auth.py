@@ -7,7 +7,7 @@ from .utils import import_class
 
 try:
     UserAccessToken = import_class(settings.RXJWT["ACCESS_TOKEN_CLASS"])
-except ImportError or KeyError:
+except (ImportError, KeyError):
     UserAccessToken = DefaultUserAceessToken
 
 
