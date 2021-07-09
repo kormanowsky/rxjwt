@@ -2,8 +2,9 @@
 File with examples.
 """
 
-from .utils import generate_secret
-from .token import AccessToken
+from rxjwt.utils import generate_secret
+from rxjwt.token import AccessToken
+
 if __name__ == "__main__":
     SECRET = generate_secret()
     token = str(AccessToken.generate(payload={"a": "b"}, secret=SECRET))

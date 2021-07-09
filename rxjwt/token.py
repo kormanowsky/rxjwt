@@ -6,10 +6,10 @@ from json import dumps as json_encode, loads as json_decode
 
 from django.contrib.auth import get_user_model
 
-from .exceptions import IncorrectTokenHeaderException, IncorrectTokenPayloadException, \
-    InvalidAlgorithmException
-from .models import ExpiredToken
-from .utils import string_as_base64
+from rxjwt.exceptions import IncorrectTokenHeaderException, \
+    IncorrectTokenPayloadException, InvalidAlgorithmException
+from rxjwt.models import ExpiredToken
+from rxjwt.utils import string_as_base64
 
 
 class Token:

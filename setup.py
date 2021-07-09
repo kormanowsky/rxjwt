@@ -3,7 +3,6 @@ from distutils.core import setup
 setup(
     name='rxjwt',
     packages=['rxjwt'],
-    package_dir={"rxjwt": "."},
     version='1.0',
     license='MIT',
     description='RXJWT - Extendable JWT library for Django REST Framework. '
