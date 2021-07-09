@@ -4,7 +4,7 @@ This library provides user authorization functions through JSON Web Token (JWT) 
 
 ## Installation 
 
-1. Clone this repo into your project directory. 
+1. `pip install rxjwt`
 2. Add rxjwt app to your INSTALLED APPS: 
 ```python3
 INSTALLED_APPS = [
